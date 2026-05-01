@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday, Babydoll ❤️</title>
+    <style>
+        :root {
+            --primary-pink: #ff4d6d;
+            --soft-white: #fff0f3;
+            --dark-bg: #1a1a1a;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Georgia', serif;
+            overflow: hidden;
+            background-color: var(--dark-bg);
+            color: white;
+            transition: background 1.5s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        /* Hearts Background */
+        #hearts-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .heart {
+            position: absolute;
+            color: var(--primary-pink);
+            animation: float 4s linear infinite;
+            opacity: 0.6;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(110vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* Screen States */
+        .screen {
+            text-align: center;
+            width: 90%;
+            max-width: 500px;
+            display: none;
+            z-index: 10;
+            animation: fadeIn 1s ease;
+        }
+
+        .active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Interactive Elements */
+        input[type="password"] {
+            padding: 12px;
+            border-radius: 25px;
+            border: 2px solid var(--primary-pink);
+            margin-bottom: 15px;
+            text-align: center;
+            outline: none;
+        }
+
+        button {
+            background: var(--primary-pink);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            box-shadow: 0 4px 15px rgba(255, 77, 109, 0.3);
+            transition: 0.3s;
+        }
+
+        button:hover { transform: scale(1.05); }
+
+        #btn-no { position: absolute; transition: 0.1s; }
+
+        .slider-container { margin: 40px 0; }
+        input[type="range"] { width: 100%; accent-color: var(--primary-pink); cursor: pointer; }
+
+        /* Envelope & Letter */
+        .envelope-wrapper {
+            cursor: pointer;
+            position: relative;
+            margin: 20px auto;
+            width: 120px;
+            height: 80px;
+            background: #c19a6b;
+            border-radius: 4px;
+            display: inline-block;
+        }
+
+        .wax-seal {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 35px;
+            height: 35px;
+            background: #8b0000;
+            border-radius: 50%;
+            border: 2px solid #5e0000;
+        }
+
+        .letter {
+            display: none;
+            background: #fff9f0;
+            color: #2c2c2c;
+            padding: 40px;
+            border-radius: 2px;
+            max-height: 450px;
+            overflow-y: auto;
+            text-align: left;
+            line-height: 1.8;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            font-size: 1.05rem;
+        }
+
+        /* Cake Emoji Glow */
+        .cake { font-size: 5rem; display: block; margin-bottom: 10px; filter: drop-shadow(0 0 10px gold); }
+
+    </style>
+</head>
+<body>
+
+    <div id="player" style="display:none"></div>
+
+    <div id="hearts-container"></div>
+
+    <div id="dark-screen" class="screen active">
+        <h2 style="font-weight: 300;">It's a bit dark in here...</h2>
+        <button onclick="turnOnLights()">Let's turn on the lights, shall we?</button>
+    </div>
+
+    <div id="password-screen" class="screen">
+        <h2>Enter the secret word</h2>
+        <input type="password" id="pw-input" placeholder="Hint: Your nickname for me">
+        <br>
+        <button onclick="checkPassword()">Unlock</button>
+    </div>
+
+    <div id="question-screen" class="screen">
+        <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHpueG8yc3R0ZzZtN3N4N3R6N3R6N3R6N3R6N3R6N3R6N3R6JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/c76IJLufpNUMo/giphy.gif" width="180" style="border-radius: 15px;">
+        <h2>Hi... do you love me?</h2>
+        <div style="height: 80px; position: relative; margin-top: 20px;">
+            <button onclick="nextScreen('slider-screen')">Yes!</button>
+            <button id="btn-no" onmouseover="moveNo()">No</button>
+        </div>
+    </div>
+
+    <div id="slider-screen" class="screen">
+        <h2>How much do you love me?</h2>
+        <div class="slider-container">
+            <input type="range" min="1" max="10" value="1" id="love-slider" oninput="updateSlider(this.value)">
+            <h3 id="slider-message" style="color: var(--primary-pink)">Slide to find out...</h3>
+        </div>
+        <button id="slider-btn" style="display:none" onclick="nextScreen('envelope-screen')">Prove it ❤️</button>
+    </div>
+
+    <div id="envelope-screen" class="screen">
+        <span class="cake">🎂</span>
+        <h2 style="color: var(--primary-pink); margin-bottom: 30px;">Happy Birthday!</h2>
+        <div class="envelope-wrapper" id="envelope" onclick="openLetter()">
+            <div class="wax-seal"></div>
+        </div>
+        <div id="letter-content" class="letter">
+            <p><strong>Happy birthday, babydoll ❤️</strong></p>
+            <p>I love you, more than I probably say out loud, more than I sometimes even know how to explain.</p>
+            <p>I don’t think I ever imagined a day like this… where you and I would be here, celebrating your birthday together. And yet, here we are, and it feels so natural, like something that quietly found its way to me at the right time.</p>
+            <p>Being with you hasn’t just been about the good days, it’s been about everything in between. The normal days, the messy ones, the ones where nothing really makes sense. And somehow, even in those, you make things feel lighter.</p>
+            <p>I want to be there for all of it with you, the highs that make us feel unstoppable, and the lows that test us in ways we don’t expect. I don’t just want the easy parts of loving you, I want the real parts too.</p>
+            <p>Sometimes I think about the future, and you’re in all of it. I think about you turning 40, and me being there, still celebrating you. I think about us at 70, a little slower, a little wrinkled, but still sitting next to each other like we never left.</p>
+            <p>And more than anything, I just want to be beside you, for as long as life lets me.</p>
+            <p>You are one of the best things that has ever happened to me.</p>
+            <p>You’ve made my days softer, my thoughts calmer, and my world feel a little more like home.</p>
+            <p>I’m really grateful for you.</p>
+            <p>Happy birthday, my love 🤍<br>
+            — yours, always</p>
+        </div>
+    </div>
+
+    <script>
+        // YouTube API setup for "Until I Found You"
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+        var player;
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('player', {
+                height: '0',
+                width: '0',
+                videoId: 'GxldQ9GyXqc', // Until I Found You ID
+                events: {
+                    'onReady': onPlayerReady
+                }
+            });
+        }
+
+        function onPlayerReady(event) {
+            // Player is ready but won't play until user interacts
+        }
+
+        // Heart Animation
+        function createHeart() {
+            const container = document.getElementById('hearts-container');
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            heart.innerHTML = '❤️';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.fontSize = Math.random() * 15 + 10 + 'px';
+            heart.style.animationDuration = Math.random() * 2 + 3 + 's';
+            container.appendChild(heart);
+            setTimeout(() => heart.remove(), 5000);
+        }
+        setInterval(createHeart, 400);
+
+        function turnOnLights() {
+            document.body.style.backgroundColor = '#fff0f3';
+            document.body.style.color = '#333';
+            if (player) player.playVideo(); // Starts the music
+            nextScreen('password-screen');
+        }
+
+        function checkPassword() {
+            const pw = document.getElementById('pw-input').value.toLowerCase();
+            if (pw === 'sunshine') {
+                nextScreen('question-screen');
+            } else {
+                alert("That's not the secret word! ❤️");
+            }
+        }
+
+        function nextScreen(id) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+        }
+
+        function moveNo() {
+            const btn = document.getElementById('btn-no');
+            const x = Math.random() * (window.innerWidth - 120);
+            const y = Math.random() * (window.innerHeight - 80);
+            btn.style.left = x + 'px';
+            btn.style.top = y + 'px';
+        }
+
+        function updateSlider(val) {
+            const msg = document.getElementById('slider-message');
+            const btn = document.getElementById('slider-btn');
+            const messages = {
+                1: "Are you sure? 🥺",
+                3: "A little more...",
+                5: "I love you too! 💖",
+                8: "Almost there...",
+                10: "Infinity! ❤️✨"
+            };
+            msg.innerText = messages[val] || "More...";
+            if (val == 10) btn.style.display = 'inline-block';
+        }
+
+        function openLetter() {
+            document.getElementById('envelope').style.display = 'none';
+            document.getElementById('letter-content').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
